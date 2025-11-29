@@ -35,7 +35,7 @@ import uranusTexture from '/images/uranus.jpg';
 import uraRingTexture from '/images/uranus_ring.png';
 import neptuneTexture from '/images/neptune.jpg';
 
-// ******  SETUP  ******
+//  SETUP 
 console.log("Create the scene");
 const scene = new THREE.Scene();
 
@@ -59,11 +59,11 @@ console.log("Set up texture loader");
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 const loadTexture = new THREE.TextureLoader();
 
-// ******  POSTPROCESSING setup ******
+//  POSTPROCESSING setup
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 
-// ******  OUTLINE PASS  ******
+//  OUTLINE PASS 
 const outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
 outlinePass.edgeStrength = 3;
 outlinePass.edgeGlow = 1;
@@ -71,20 +71,18 @@ outlinePass.visibleEdgeColor.set(0xffffff);
 outlinePass.hiddenEdgeColor.set(0x190a05);
 composer.addPass(outlinePass);
 
-// ******  BLOOM PASS  ******
+//  BLOOM PASS 
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1, 0.4, 0.85);
 bloomPass.threshold = 1;
 bloomPass.radius = 0.9;
 composer.addPass(bloomPass);
 
-// ****** AMBIENT LIGHT ******
-console.log("Add the ambient light");
+// AMBIENT LIGHT
 var lightAmbient = new THREE.AmbientLight(0x222222, 6); 
 scene.add(lightAmbient);
 
-// ******  Star background  ******
+//  Star background 
 scene.background = cubeTextureLoader.load([
-
   bgTexture3,
   bgTexture1,
   bgTexture2,
@@ -93,23 +91,23 @@ scene.background = cubeTextureLoader.load([
   bgTexture2
 ]);
 
-// ******  CONTROLS  ******
-const gui = new dat.GUI({ autoPlace: false });
+//  CONTROLS 
+const gui = new dat.GUI({ autoPlace: true, width: 300 , hideable: true, closeOnTop: true});
 const customContainer = document.getElementById('gui-container');
 customContainer.appendChild(gui.domElement);
 
-// ****** SETTINGS FOR INTERACTIVE CONTROLS  ******
+// SETTINGS FOR INTERACTIVE CONTROLS 
 const settings = {
-  accelerationOrbit: 1,
-  acceleration: 1,
-  sunIntensity: 1.9
+  Revolusi: 1,
+  Rotasi: 1,
+  CahayaMatahari: 1.9
 };
 
-gui.add(settings, 'accelerationOrbit', 0, 10).onChange(value => {
+gui.add(settings, 'Revolusi', 0, 10).onChange(value => {
 });
-gui.add(settings, 'acceleration', 0, 10).onChange(value => {
+gui.add(settings, 'Rotasi', 0, 10).onChange(value => {
 });
-gui.add(settings, 'sunIntensity', 1, 10).onChange(value => {
+gui.add(settings, 'CahayaMatahari', 1, 10).onChange(value => {
   sunMat.emissiveIntensity = value;
 });
 
@@ -143,7 +141,7 @@ function onDocumentMouseDown(event) {
     if (selectedPlanet) {
       closeInfoNoZoomOut();
       
-      settings.accelerationOrbit = 0; // Stop orbital movement
+      settings.Revolusi = 0; // Stop orbital movement
 
       // Update camera to look at the selected planet
       const planetPosition = new THREE.Vector3();
@@ -188,14 +186,35 @@ function identifyPlanet(clickedObject) {
   return null;
 }
 
-// ******  SHOW PLANET INFO AFTER SELECTION  ******
+//  SHOW PLANET INFO AFTER SELECTION 
 function showPlanetInfo(planet) {
   var info = document.getElementById('planetInfo');
   var name = document.getElementById('planetName');
   var details = document.getElementById('planetDetails');
+  var satelliteDetails = document.getElementById('satelliteDetails');
 
   name.innerText = planet;
   details.innerText = `Radius: ${planetData[planet].radius}\nTilt: ${planetData[planet].tilt}\nRotation: ${planetData[planet].rotation}\nOrbit: ${planetData[planet].orbit}\nDistance: ${planetData[planet].distance}\nMoons: ${planetData[planet].moons}\nInfo: ${planetData[planet].info}`;
+
+  // Display satellite information
+  const satellites = satelliteData[planet];
+  if (satellites && satellites.length > 0) {
+    let satelliteHTML = '';
+    satellites.forEach(satellite => {
+      satelliteHTML += `
+        <div class="satellite-item">
+          <h3>${satellite.name}</h3>
+          <p><strong>Radius:</strong> ${satellite.radius}</p>
+          <p><strong>Jarak:</strong> ${satellite.distance}</p>
+          <p><strong>Orbit:</strong> ${satellite.orbit}</p>
+          <p><strong>Info:</strong> ${satellite.info}</p>
+        </div>
+      `;
+    });
+    satelliteDetails.innerHTML = satelliteHTML;
+  } else {
+    satelliteDetails.innerHTML = '<p class="no-satellites">Planet ini tidak memiliki satelit alami.</p>';
+  }
 
   info.style.display = 'block';
 }
@@ -205,18 +224,40 @@ let zoomOutTargetPosition = new THREE.Vector3(-175, 115, 5);
 function closeInfo() {
   var info = document.getElementById('planetInfo');
   info.style.display = 'none';
-  settings.accelerationOrbit = 1;
+  settings.Revolusi = 1;
   isZoomingOut = true;
   controls.target.set(0, 0, 0);
+  
+  // Reset to planet tab
+  resetTabs();
 }
 window.closeInfo = closeInfo;
 // close info when clicking another planet
 function closeInfoNoZoomOut() {
   var info = document.getElementById('planetInfo');
   info.style.display = 'none';
-  settings.accelerationOrbit = 1;
+  settings.Revolusi = 1;
+  
+  // Reset to planet tab
+  resetTabs();
 }
-// ******  SUN  ******
+
+// Reset tabs to default (Planet tab)
+function resetTabs() {
+  const tabContents = document.getElementsByClassName('tab-content');
+  const tabButtons = document.getElementsByClassName('tab-button');
+  
+  for (let i = 0; i < tabContents.length; i++) {
+    tabContents[i].classList.remove('active');
+  }
+  for (let i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].classList.remove('active');
+  }
+  
+  document.getElementById('planetTab').classList.add('active');
+  tabButtons[0].classList.add('active');
+}
+//  SUN 
 let sunMat;
 
 const sunSize = 697/40; // 40 times smaller scale than earth
@@ -224,7 +265,7 @@ const sunGeom = new THREE.SphereGeometry(sunSize, 32, 20);
 sunMat = new THREE.MeshStandardMaterial({
   emissive: 0xFFF88F,
   emissiveMap: loadTexture.load(sunTexture),
-  emissiveIntensity: settings.sunIntensity
+  emissiveIntensity: settings.CahayaMatahari
 });
 const sun = new THREE.Mesh(sunGeom, sunMat);
 scene.add(sun);
@@ -234,7 +275,7 @@ const pointLight = new THREE.PointLight(0xFDFFD3 , 1200, 400, 1.4);
 scene.add(pointLight);
 
 
-// ******  PLANET CREATION FUNCTION  ******
+//  PLANET CREATION FUNCTION 
 function createPlanet(planetName, size, position, tilt, texture, bump, ring, atmosphere, moons){
 
   let material;
@@ -359,7 +400,7 @@ function loadObject(path, position, scale, callback) {
   });
 }
 
-// ******  ASTEROIDS  ******
+//  ASTEROIDS 
 const asteroids = [];
 function loadAsteroids(path, numberOfAsteroids, minOrbitRadius, maxOrbitRadius) {
   const loader = new GLTFLoader();
@@ -427,13 +468,13 @@ const earthMaterial = new THREE.ShaderMaterial({
 });
 
 
-// ******  MOONS  ******
+//  MOONS 
 // Earth
 const earthMoon = [{
   size: 1.6,
   texture: earthMoonTexture,
   bump: earthMoonBump,
-  orbitSpeed: 0.001 * settings.accelerationOrbit,
+  orbitSpeed: 0.001 * settings.Revolusi,
   orbitRadius: 10
 }]
 
@@ -443,7 +484,7 @@ const marsMoons = [
     modelPath: '/images/mars/phobos.glb',
     scale: 0.1,
     orbitRadius: 5,
-    orbitSpeed: 0.002 * settings.accelerationOrbit,
+    orbitSpeed: 0.002 * settings.Revolusi,
     position: 100,
     mesh: null
   },
@@ -451,7 +492,7 @@ const marsMoons = [
     modelPath: '/images/mars/deimos.glb',
     scale: 0.1,
     orbitRadius: 9,
-    orbitSpeed: 0.0005 * settings.accelerationOrbit,
+    orbitSpeed: 0.0005 * settings.Revolusi,
     position: 120,
     mesh: null
   }
@@ -463,29 +504,29 @@ const jupiterMoons = [
     size: 1.6,
     texture: ioTexture,
     orbitRadius: 20,
-    orbitSpeed: 0.0005 * settings.accelerationOrbit
+    orbitSpeed: 0.0005 * settings.Revolusi
   },
   {
     size: 1.4,
     texture: europaTexture,
     orbitRadius: 24,
-    orbitSpeed: 0.00025 * settings.accelerationOrbit
+    orbitSpeed: 0.00025 * settings.Revolusi
   },
   {
     size: 2,
     texture: ganymedeTexture,
     orbitRadius: 28,
-    orbitSpeed: 0.000125 * settings.accelerationOrbit
+    orbitSpeed: 0.000125 * settings.Revolusi
   },
   {
     size: 1.7,
     texture: callistoTexture,
     orbitRadius: 32,
-    orbitSpeed: 0.00006 * settings.accelerationOrbit
+    orbitSpeed: 0.00006 * settings.Revolusi
   }
 ];
 
-// ******  PLANET CREATIONS  ******
+//  PLANET CREATIONS 
 const mercury = new createPlanet('Mercury', 2.4, 40, 0, mercuryTexture, mercuryBump);
 const venus = new createPlanet('Venus', 6.1, 65, 3, venusTexture, venusBump, null, venusAtmosphere);
 const earth = new createPlanet('Earth', 6.4, 90, 23, earthMaterial, null, null, earthAtmosphere, earthMoon);
@@ -517,7 +558,7 @@ const uranus = new createPlanet('Uranus', 25/4, 320, 82, uranusTexture, null, {
 });
 const neptune = new createPlanet('Neptune', 24/4, 340, 28, neptuneTexture);
 
-  // ******  PLANETS DATA  ******
+  //  PLANETS DATA 
   const planetData = {
     'Mercury': {
       radius: '2.439,7 km',
@@ -593,6 +634,129 @@ const neptune = new createPlanet('Neptune', 24/4, 340, 28, neptuneTexture);
     },
   };
 
+  //  SATELLITES DATA
+  const satelliteData = {
+    'Mercury': [],
+    'Venus': [],
+    'Earth': [
+      {
+        name: 'Bulan (Moon)',
+        radius: '1.737,4 km',
+        distance: '384.400 km dari Bumi',
+        orbit: '27,3 hari',
+        info: 'Satu-satunya satelit alami Bumi. Bulan adalah satelit terbesar kelima di tata surya.'
+      }
+    ],
+    'Mars': [
+      {
+        name: 'Phobos',
+        radius: '11,3 km',
+        distance: '9.376 km dari Mars',
+        orbit: '7,7 jam',
+        info: 'Satelit terbesar Mars, bergerak sangat cepat mengelilingi planet induknya.'
+      },
+      {
+        name: 'Deimos',
+        radius: '6,2 km',
+        distance: '23.463 km dari Mars',
+        orbit: '30,3 jam',
+        info: 'Satelit terkecil Mars, memiliki permukaan yang lebih halus dibanding Phobos.'
+      }
+    ],
+    'Jupiter': [
+      {
+        name: 'Io',
+        radius: '1.821,6 km',
+        distance: '421.700 km dari Jupiter',
+        orbit: '1,77 hari',
+        info: 'Satelit dengan aktivitas vulkanik paling aktif di tata surya.'
+      },
+      {
+        name: 'Europa',
+        radius: '1.560,8 km',
+        distance: '671.034 km dari Jupiter',
+        orbit: '3,55 hari',
+        info: 'Memiliki samudra di bawah permukaan es, kandidat potensial untuk kehidupan.'
+      },
+      {
+        name: 'Ganymede',
+        radius: '2.634,1 km',
+        distance: '1.070.412 km dari Jupiter',
+        orbit: '7,15 hari',
+        info: 'Satelit terbesar di tata surya, bahkan lebih besar dari planet Merkurius.'
+      },
+      {
+        name: 'Callisto',
+        radius: '2.410,3 km',
+        distance: '1.882.709 km dari Jupiter',
+        orbit: '16,69 hari',
+        info: 'Satelit dengan kawah paling banyak di tata surya, permukaannya sangat tua.'
+      }
+    ],
+    'Saturn': [
+      {
+        name: 'Titan',
+        radius: '2.574,7 km',
+        distance: '1.221.870 km dari Saturn',
+        orbit: '15,95 hari',
+        info: 'Satelit terbesar kedua di tata surya, memiliki atmosfer tebal seperti Bumi.'
+      },
+      {
+        name: 'Rhea',
+        radius: '763,8 km',
+        distance: '527.108 km dari Saturn',
+        orbit: '4,52 hari',
+        info: 'Satelit terbesar kedua Saturn, terdiri sebagian besar dari es air.'
+      },
+      {
+        name: 'Iapetus',
+        radius: '734,5 km',
+        distance: '3.560.820 km dari Saturn',
+        orbit: '79,33 hari',
+        info: 'Memiliki satu sisi terang dan satu sisi gelap, fenomena yang masih misterius.'
+      }
+    ],
+    'Uranus': [
+      {
+        name: 'Titania',
+        radius: '788,4 km',
+        distance: '435.910 km dari Uranus',
+        orbit: '8,71 hari',
+        info: 'Satelit terbesar Uranus dengan ngarai dan kawah yang dalam.'
+      },
+      {
+        name: 'Oberon',
+        radius: '761,4 km',
+        distance: '583.520 km dari Uranus',
+        orbit: '13,46 hari',
+        info: 'Satelit terjauh dari planet induknya di antara satelit besar Uranus.'
+      },
+      {
+        name: 'Umbriel',
+        radius: '584,7 km',
+        distance: '266.000 km dari Uranus',
+        orbit: '4,14 hari',
+        info: 'Satelit tergelap Uranus dengan permukaan yang hampir seragam.'
+      }
+    ],
+    'Neptune': [
+      {
+        name: 'Triton',
+        radius: '1.353,4 km',
+        distance: '354.759 km dari Neptunus',
+        orbit: '5,88 hari',
+        info: 'Satelit terbesar Neptunus, berotasi berlawanan arah dengan planet induknya.'
+      },
+      {
+        name: 'Proteus',
+        radius: '210 km',
+        distance: '117.647 km dari Neptunus',
+        orbit: '1,12 hari',
+        info: 'Satelit terbesar kedua Neptunus, bentuknya tidak bulat sempurna.'
+      }
+    ]
+  };
+
 
 // Array of planets and atmospheres for raycasting
 const raycastTargets = [
@@ -600,7 +764,7 @@ const raycastTargets = [
   mars.planet, jupiter.planet, saturn.planet, uranus.planet, neptune.planet
 ];
 
-// ******  SHADOWS  ******
+//  SHADOWS 
 renderer.shadowMap.enabled = true;
 pointLight.castShadow = true;
 
@@ -644,25 +808,25 @@ neptune.planet.receiveShadow = true;
 function animate(){
 
   //rotating planets around the sun and itself
-  sun.rotateY(0.001 * settings.acceleration);
-  mercury.planet.rotateY(0.001 * settings.acceleration);
-  mercury.planet3d.rotateY(0.004 * settings.accelerationOrbit);
-  venus.planet.rotateY(0.0005 * settings.acceleration)
-  venus.Atmosphere.rotateY(0.0005 * settings.acceleration);
-  venus.planet3d.rotateY(0.0006 * settings.accelerationOrbit);
-  earth.planet.rotateY(0.005 * settings.acceleration);
-  earth.Atmosphere.rotateY(0.001 * settings.acceleration);
-  earth.planet3d.rotateY(0.001 * settings.accelerationOrbit);
-  mars.planet.rotateY(0.01 * settings.acceleration);
-  mars.planet3d.rotateY(0.0007 * settings.accelerationOrbit);
-  jupiter.planet.rotateY(0.005 * settings.acceleration);
-  jupiter.planet3d.rotateY(0.0003 * settings.accelerationOrbit);
-  saturn.planet.rotateY(0.01 * settings.acceleration);
-  saturn.planet3d.rotateY(0.0002 * settings.accelerationOrbit);
-  uranus.planet.rotateY(0.005 * settings.acceleration);
-  uranus.planet3d.rotateY(0.0001 * settings.accelerationOrbit);
-  neptune.planet.rotateY(0.005 * settings.acceleration);
-  neptune.planet3d.rotateY(0.00008 * settings.accelerationOrbit);
+  sun.rotateY(0.001 * settings.Rotasi);
+  mercury.planet.rotateY(0.001 * settings.Rotasi);
+  mercury.planet3d.rotateY(0.004 * settings.Revolusi);
+  venus.planet.rotateY(0.0005 * settings.Rotasi)
+  venus.Atmosphere.rotateY(0.0005 * settings.Rotasi);
+  venus.planet3d.rotateY(0.0006 * settings.Revolusi);
+  earth.planet.rotateY(0.005 * settings.Rotasi);
+  earth.Atmosphere.rotateY(0.001 * settings.Rotasi);
+  earth.planet3d.rotateY(0.001 * settings.Revolusi);
+  mars.planet.rotateY(0.01 * settings.Rotasi);
+  mars.planet3d.rotateY(0.0007 * settings.Revolusi);
+  jupiter.planet.rotateY(0.005 * settings.Rotasi);
+  jupiter.planet3d.rotateY(0.0003 * settings.Revolusi);
+  saturn.planet.rotateY(0.01 * settings.Rotasi);
+  saturn.planet3d.rotateY(0.0002 * settings.Revolusi);
+  uranus.planet.rotateY(0.005 * settings.Rotasi);
+  uranus.planet3d.rotateY(0.0001 * settings.Revolusi);
+  neptune.planet.rotateY(0.005 * settings.Rotasi);
+  neptune.planet3d.rotateY(0.00008 * settings.Revolusi);
 
 // Animate Earth's moon
 if (earth.moons) {
@@ -710,11 +874,11 @@ if (jupiter.moons) {
 // Rotate asteroids
 asteroids.forEach(asteroid => {
   asteroid.rotation.y += 0.0001;
-  asteroid.position.x = asteroid.position.x * Math.cos(0.0001 * settings.accelerationOrbit) + asteroid.position.z * Math.sin(0.0001 * settings.accelerationOrbit);
-  asteroid.position.z = asteroid.position.z * Math.cos(0.0001 * settings.accelerationOrbit) - asteroid.position.x * Math.sin(0.0001 * settings.accelerationOrbit);
+  asteroid.position.x = asteroid.position.x * Math.cos(0.0001 * settings.Revolusi) + asteroid.position.z * Math.sin(0.0001 * settings.Revolusi);
+  asteroid.position.z = asteroid.position.z * Math.cos(0.0001 * settings.Revolusi) - asteroid.position.x * Math.sin(0.0001 * settings.Revolusi);
 });
 
-// ****** OUTLINES ON PLANETS ******
+// OUTLINES ON PLANETS
 raycaster.setFromCamera(mouse, camera);
 
 // Check for intersections
@@ -736,7 +900,7 @@ if (intersects.length > 0) {
     outlinePass.selectedObjects = [intersectedObject];
   }
 }
-// ******  ZOOM IN/OUT  ******
+//  ZOOM IN/OUT 
 if (isMovingTowardsPlanet) {
   // Smoothly move the camera towards the target position
   camera.position.lerp(targetCameraPosition, 0.03);
@@ -759,6 +923,28 @@ if (isMovingTowardsPlanet) {
   requestAnimationFrame(animate);
   composer.render();
 }
+// TAB SWITCHING FUNCTION
+function switchTab(event, tabName) {
+  // Hide all tab contents
+  const tabContents = document.getElementsByClassName('tab-content');
+  for (let i = 0; i < tabContents.length; i++) {
+    tabContents[i].classList.remove('active');
+  }
+
+  // Remove active class from all buttons
+  const tabButtons = document.getElementsByClassName('tab-button');
+  for (let i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].classList.remove('active');
+  }
+
+  // Show the selected tab content
+  document.getElementById(tabName).classList.add('active');
+  
+  // Add active class to the clicked button
+  event.currentTarget.classList.add('active');
+}
+window.switchTab = switchTab;
+
 loadAsteroids('/asteroids/asteroidPack.glb', 1000, 130, 160);
 loadAsteroids('/asteroids/asteroidPack.glb', 3000, 352, 370);
 animate();
