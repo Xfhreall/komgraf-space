@@ -34,7 +34,6 @@ import satRingTexture from '/images/saturn_ring.png';
 import uranusTexture from '/images/uranus.jpg';
 import uraRingTexture from '/images/uranus_ring.png';
 import neptuneTexture from '/images/neptune.jpg';
-import plutoTexture from '/images/plutomap.jpg';
 
 // ******  SETUP  ******
 console.log("Create the scene");
@@ -124,7 +123,6 @@ function onMouseMove(event) {
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 }
 
-// ******  SELECT PLANET  ******
 let selectedPlanet = null;
 let isMovingTowardsPlanet = false;
 let targetCameraPosition = new THREE.Vector3();
@@ -185,10 +183,7 @@ function identifyPlanet(clickedObject) {
         } else if (clickedObject.material === neptune.planet.material) {
           offset = 20;
           return neptune;
-        } else if (clickedObject.material === pluto.planet.material) {
-          offset = 10;
-          return pluto;
-        } 
+        }
 
   return null;
 }
@@ -348,7 +343,6 @@ function createPlanet(planetName, size, position, tilt, texture, bump, ring, atm
 }
 
 
-// ******  LOADING OBJECTS METHOD  ******
 function loadObject(path, position, scale, callback) {
   const loader = new GLTFLoader();
 
@@ -522,98 +516,88 @@ const uranus = new createPlanet('Uranus', 25/4, 320, 82, uranusTexture, null, {
   texture: uraRingTexture
 });
 const neptune = new createPlanet('Neptune', 24/4, 340, 28, neptuneTexture);
-const pluto = new createPlanet('Pluto', 1, 350, 57, plutoTexture)
 
   // ******  PLANETS DATA  ******
   const planetData = {
     'Mercury': {
-        radius: '2,439.7 km',
-        tilt: '0.034°',
-        rotation: '58.6 Earth days',
-        orbit: '88 Earth days',
-        distance: '57.9 million km',
-        moons: '0',
-        info: 'The smallest planet in our solar system and nearest to the Sun.'
+      radius: '2.439,7 km',
+      tilt: '0,034°',
+      rotation: '58,6 hari Bumi',
+      orbit: '88 hari Bumi',
+      distance: '57,9 juta km',
+      moons: '0',
+      info: 'Planet terkecil di tata surya kita dan terdekat dengan Matahari.'
     },
     'Venus': {
-        radius: '6,051.8 km',
-        tilt: '177.4°',
-        rotation: '243 Earth days',
-        orbit: '225 Earth days',
-        distance: '108.2 million km',
-        moons: '0',
-        info: 'Second planet from the Sun, known for its extreme temperatures and thick atmosphere.'
+      radius: '6.051,8 km',
+      tilt: '177,4°',
+      rotation: '243 hari Bumi',
+      orbit: '225 hari Bumi',
+      distance: '108,2 juta km',
+      moons: '0',
+      info: 'Planet kedua dari Matahari, dikenal dengan suhu ekstrem dan atmosfer tebalnya.'
     },
     'Earth': {
-        radius: '6,371 km',
-        tilt: '23.5°',
-        rotation: '24 hours',
-        orbit: '365 days',
-        distance: '150 million km',
-        moons: '1 (Moon)',
-        info: 'Third planet from the Sun and the only known planet to harbor life.'
+      radius: '6.371 km',
+      tilt: '23,5°',
+      rotation: '24 jam',
+      orbit: '365 hari',
+      distance: '150 juta km',
+      moons: '1 (Bulan)',
+      info: 'Planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan.'
     },
     'Mars': {
-        radius: '3,389.5 km',
-        tilt: '25.19°',
-        rotation: '1.03 Earth days',
-        orbit: '687 Earth days',
-        distance: '227.9 million km',
-        moons: '2 (Phobos and Deimos)',
-        info: 'Known as the Red Planet, famous for its reddish appearance and potential for human colonization.'
+      radius: '3.389,5 km',
+      tilt: '25,19°',
+      rotation: '1,03 hari Bumi',
+      orbit: '687 hari Bumi',
+      distance: '227,9 juta km',
+      moons: '2 (Phobos dan Deimos)',
+      info: 'Dikenal sebagai Planet Merah, terkenal dengan penampilannya yang kemerahan dan potensi untuk kolonisasi manusia.'
     },
     'Jupiter': {
-        radius: '69,911 km',
-        tilt: '3.13°',
-        rotation: '9.9 hours',
-        orbit: '12 Earth years',
-        distance: '778.5 million km',
-        moons: '95 known moons (Ganymede, Callisto, Europa, Io are the 4 largest)',
-        info: 'The largest planet in our solar system, known for its Great Red Spot.'
+      radius: '69.911 km',
+      tilt: '3,13°',
+      rotation: '9,9 jam',
+      orbit: '12 tahun Bumi',
+      distance: '778,5 juta km',
+      moons: '95 bulan yang diketahui (Ganymede, Callisto, Europa, Io adalah 4 yang terbesar)',
+      info: 'Planet terbesar di tata surya kita, dikenal dengan Bintik Merah Besarnya.'
     },
     'Saturn': {
-        radius: '58,232 km',
-        tilt: '26.73°',
-        rotation: '10.7 hours',
-        orbit: '29.5 Earth years',
-        distance: '1.4 billion km',
-        moons: '146 known moons',
-        info: 'Distinguished by its extensive ring system, the second-largest planet in our solar system.'
+      radius: '58.232 km',
+      tilt: '26,73°',
+      rotation: '10,7 jam',
+      orbit: '29,5 tahun Bumi',
+      distance: '1,4 miliar km',
+      moons: '146 bulan yang diketahui',
+      info: 'Dibedakan oleh sistem cincinnya yang luas, planet terbesar kedua di tata surya kita.'
     },
     'Uranus': {
-        radius: '25,362 km',
-        tilt: '97.77°',
-        rotation: '17.2 hours',
-        orbit: '84 Earth years',
-        distance: '2.9 billion km',
-        moons: '27 known moons',
-        info: 'Known for its unique sideways rotation and pale blue color.'
+      radius: '25.362 km',
+      tilt: '97,77°',
+      rotation: '17,2 jam',
+      orbit: '84 tahun Bumi',
+      distance: '2,9 miliar km',
+      moons: '27 bulan yang diketahui',
+      info: 'Dikenal dengan rotasi menyamping yang unik dan warna biru pucatnya.'
     },
     'Neptune': {
-        radius: '24,622 km',
-        tilt: '28.32°',
-        rotation: '16.1 hours',
-        orbit: '165 Earth years',
-        distance: '4.5 billion km',
-        moons: '14 known moons',
-        info: 'The most distant planet from the Sun in our solar system, known for its deep blue color.'
+      radius: '24.622 km',
+      tilt: '28,32°',
+      rotation: '16,1 jam',
+      orbit: '165 tahun Bumi',
+      distance: '4,5 miliar km',
+      moons: '14 bulan yang diketahui',
+      info: 'Planet terjauh dari Matahari di tata surya kita, dikenal dengan warna biru tuanya.'
     },
-    'Pluto': {
-        radius: '1,188.3 km',
-        tilt: '122.53°',
-        rotation: '6.4 Earth days',
-        orbit: '248 Earth years',
-        distance: '5.9 billion km',
-        moons: '5 (Charon, Styx, Nix, Kerberos, Hydra)',
-        info: 'Originally classified as the ninth planet, Pluto is now considered a dwarf planet.'
-    }
-};
+  };
 
 
 // Array of planets and atmospheres for raycasting
 const raycastTargets = [
-  mercury.planet, venus.planet, venus.Atmosphere, earth.planet, earth.Atmosphere, 
-  mars.planet, jupiter.planet, saturn.planet, uranus.planet, neptune.planet, pluto.planet
+  mercury.planet, venus.planet, venus.Atmosphere, earth.planet, earth.Atmosphere,
+  mars.planet, jupiter.planet, saturn.planet, uranus.planet, neptune.planet
 ];
 
 // ******  SHADOWS  ******
@@ -653,7 +637,6 @@ saturn.planet.receiveShadow = true;
 saturn.Ring.receiveShadow = true;
 uranus.planet.receiveShadow = true;
 neptune.planet.receiveShadow = true;
-pluto.planet.receiveShadow = true;
 
 
 
@@ -680,8 +663,6 @@ function animate(){
   uranus.planet3d.rotateY(0.0001 * settings.accelerationOrbit);
   neptune.planet.rotateY(0.005 * settings.acceleration);
   neptune.planet3d.rotateY(0.00008 * settings.accelerationOrbit);
-  pluto.planet.rotateY(0.001 * settings.acceleration)
-  pluto.planet3d.rotateY(0.00006 * settings.accelerationOrbit)
 
 // Animate Earth's moon
 if (earth.moons) {
