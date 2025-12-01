@@ -8,7 +8,6 @@ Komgraf-Space adalah proyek berbasis web yang dibangun menggunakan Vite dan Java
 
 * Struktur proyek modern menggunakan Vite.
 * Mendukung modul ES dan hot-reload untuk proses pengembangan cepat.
-* Aset statis terorganisasi di folder `static/`.
 * Siap diperluas untuk kebutuhan visualisasi grafis atau komputasi grafis.
 
 ## Prasyarat
@@ -59,7 +58,3 @@ Kontribusi sangat terbuka! Anda dapat:
 
 * Membuat issue untuk saran atau laporan bug
 * Melakukan fork dan membuat pull request
-
-## Lisensi
-
-Proyek ini menggunakan lisensi **MIT**. Lihat file LICENSE untuk informasi lengkap.
