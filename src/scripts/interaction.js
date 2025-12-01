@@ -10,7 +10,7 @@ export function setupInteraction(camera, raycastTargets, planets, settings, cont
   let offset;
 
   function onMouseMove(event) {
-    event.preventDefault();
+    // event.preventDefault();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
   }
@@ -45,6 +45,9 @@ export function setupInteraction(camera, raycastTargets, planets, settings, cont
   }
 
   function onDocumentMouseDown(event) {
+    // Only handle clicks on the canvas
+    if (event.target.tagName !== 'CANVAS') return;
+    
     event.preventDefault();
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
