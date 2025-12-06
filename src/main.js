@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -86,14 +86,68 @@ scene.background = cubeTextureLoader.load([
   bgTexture2
 ]);
 
-const gui = new dat.GUI({ autoPlace: true, width: 300 , hideable: true, closeOnTop: true});
-const customContainer = document.getElementById('gui-container');
-customContainer.appendChild(gui.domElement);
+const revolusiInput = document.getElementById('revolusi');
+const revolusiVal = document.getElementById('revolusi-val');
+const rotasiInput = document.getElementById('rotasi');
+const rotasiVal = document.getElementById('rotasi-val');
+const cahayaInput = document.getElementById('cahaya');
+const cahayaVal = document.getElementById('cahaya-val');
+const controlPanel = document.getElementById('custom-controls');
+const closeControlsBtn = document.getElementById('close-controls');
+const showControlsBtn = document.getElementById('show-controls');
 
-gui.add(settings, 'Revolusi', 0, 10).onChange(value => {});
-gui.add(settings, 'Rotasi', 0, 10).onChange(value => {});
-gui.add(settings, 'CahayaMatahari', 1, 10).onChange(value => {
-  sunMat.emissiveIntensity = value;
+revolusiInput.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    settings.Revolusi = value;
+    revolusiVal.textContent = value;
+});
+
+rotasiInput.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    settings.Rotasi = value;
+    rotasiVal.textContent = value;
+});
+
+cahayaInput.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    settings.CahayaMatahari = value;
+    cahayaVal.textContent = value;
+    if(sunMat) sunMat.emissiveIntensity = value;
+});
+
+closeControlsBtn.addEventListener('click', () => {
+    controlPanel.classList.add('minimized');
+});
+
+showControlsBtn.addEventListener('click', () => {
+    controlPanel.classList.remove('minimized');
+});
+
+// Prevent OrbitControls from interfering with custom controls
+['mousedown', 'touchstart', 'pointerdown'].forEach(event => {
+    controlPanel.addEventListener(event, (e) => {
+        e.stopPropagation();
+    });
+});
+
+const disclaimerModal = document.getElementById('disclaimer-modal');
+const tutorialModal = document.getElementById('tutorial-modal');
+const closeDisclaimerBtn = document.getElementById('close-disclaimer');
+const closeTutorialBtn = document.getElementById('close-tutorial');
+
+closeDisclaimerBtn.addEventListener('click', () => {
+    disclaimerModal.classList.add('hidden');
+    setTimeout(() => {
+        disclaimerModal.style.display = 'none';
+        tutorialModal.classList.remove('hidden');
+    }, 500);
+});
+
+closeTutorialBtn.addEventListener('click', () => {
+    tutorialModal.classList.add('hidden');
+    setTimeout(() => {
+        tutorialModal.style.display = 'none';
+    }, 500);
 });
 
 let isZoomingOut = false;
