@@ -343,8 +343,8 @@ function animate(){
   composer.render();
 }
 
-loadAsteroids('/asteroids/asteroidPack.glb', 1000, 130, 160, scene);
-loadAsteroids('/asteroids/asteroidPack.glb', 3000, 352, 370, scene);
+loadAsteroids('./asteroids/asteroidPack.glb', 1000, 130, 160, scene);
+loadAsteroids('./asteroids/asteroidPack.glb', 3000, 352, 370, scene);
 animate();
 
 window.addEventListener('resize', function(){
