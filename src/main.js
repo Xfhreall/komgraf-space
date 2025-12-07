@@ -6,33 +6,33 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 
-import bgTexture1 from './images/1.jpg';
-import bgTexture2 from './images/2.jpg';
-import bgTexture3 from './images/3.jpg';
-import bgTexture4 from './images/4.jpg';
-import sunTexture from './images/sun.jpg';
-import mercuryTexture from './images/mercurymap.jpg';
-import mercuryBump from './images/mercurybump.jpg';
-import venusTexture from './images/venusmap.jpg';
-import venusBump from './images/venusmap.jpg';
-import venusAtmosphere from './images/venus_atmosphere.jpg';
-import earthTexture from './images/earth_daymap.jpg';
-import earthNightTexture from './images/earth_nightmap.jpg';
-import earthAtmosphere from './images/earth_atmosphere.jpg';
-import earthMoonTexture from './images/moonmap.jpg';
-import earthMoonBump from './images/moonbump.jpg';
-import marsTexture from './images/marsmap.jpg';
-import marsBump from './images/marsbump.jpg';
-import jupiterTexture from './images/jupiter.jpg';
-import ioTexture from './images/jupiterIo.jpg';
-import europaTexture from './images/jupiterEuropa.jpg';
-import ganymedeTexture from './images/jupiterGanymede.jpg';
-import callistoTexture from './images/jupiterCallisto.jpg';
-import saturnTexture from './images/saturnmap.jpg';
-import satRingTexture from './images/saturn_ring.png';
-import uranusTexture from './images/uranus.jpg';
-import uraRingTexture from './images/uranus_ring.png';
-import neptuneTexture from './images/neptune.jpg';
+import bgTexture1 from '/images/1.jpg';
+import bgTexture2 from '/images/2.jpg';
+import bgTexture3 from '/images/3.jpg';
+import bgTexture4 from '/images/4.jpg';
+import sunTexture from '/images/sun.jpg';
+import mercuryTexture from '/images/mercurymap.jpg';
+import mercuryBump from '/images/mercurybump.jpg';
+import venusTexture from '/images/venusmap.jpg';
+import venusBump from '/images/venusmap.jpg';
+import venusAtmosphere from '/images/venus_atmosphere.jpg';
+import earthTexture from '/images/earth_daymap.jpg';
+import earthNightTexture from '/images/earth_nightmap.jpg';
+import earthAtmosphere from '/images/earth_atmosphere.jpg';
+import earthMoonTexture from '/images/moonmap.jpg';
+import earthMoonBump from '/images/moonbump.jpg';
+import marsTexture from '/images/marsmap.jpg';
+import marsBump from '/images/marsbump.jpg';
+import jupiterTexture from '/images/jupiter.jpg';
+import ioTexture from '/images/jupiterIo.jpg';
+import europaTexture from '/images/jupiterEuropa.jpg';
+import ganymedeTexture from '/images/jupiterGanymede.jpg';
+import callistoTexture from '/images/jupiterCallisto.jpg';
+import saturnTexture from '/images/saturnmap.jpg';
+import satRingTexture from '/images/saturn_ring.png';
+import uranusTexture from '/images/uranus.jpg';
+import uraRingTexture from '/images/uranus_ring.png';
+import neptuneTexture from '/images/neptune.jpg';
 
 import { settings } from './scripts/constants.js';
 import { createPlanet } from './scripts/planetFactory.js';
@@ -343,8 +343,8 @@ function animate(){
   composer.render();
 }
 
-loadAsteroids('./asteroids/asteroidPack.glb', 1000, 130, 160, scene);
-loadAsteroids('./asteroids/asteroidPack.glb', 3000, 352, 370, scene);
+loadAsteroids('/asteroids/asteroidPack.glb', 1000, 130, 160, scene);
+loadAsteroids('/asteroids/asteroidPack.glb', 3000, 352, 370, scene);
 animate();
 
 window.addEventListener('resize', function(){
